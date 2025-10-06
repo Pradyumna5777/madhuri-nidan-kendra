@@ -8,7 +8,7 @@ export default function Doctors() {
 
   useEffect(() => {
     axiosInstance
-      .get("/doctors")
+      .get("/api/doctors")
       .then((res) => setDoctors(res.data))
       .catch((err) => console.error(err));
   }, []);
