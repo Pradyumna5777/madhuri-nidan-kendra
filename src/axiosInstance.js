@@ -1,10 +1,6 @@
 import axios from "axios";
 
-const baseURL =
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:5000/api" : "");
-
-if (!baseURL) console.error("API URL is not set here!");
+const baseURL = "https://doctor-management-backend-k8ns.onrender.com/api";
 
 const axiosInstance = axios.create({
   baseURL,
