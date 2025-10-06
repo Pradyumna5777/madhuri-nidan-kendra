@@ -78,7 +78,7 @@ export default function Login() {
       // Redirect based on role
       if (res.data.user.role === "admin") navigate("/admin/dashboard");
       else if (res.data.user.role === "doctor") navigate("/doctor/dashboard");
-      else navigate("/patient/dashboard");
+      else navigate("/");
 
     } catch (err) {
       console.error("Google login error:", err);
