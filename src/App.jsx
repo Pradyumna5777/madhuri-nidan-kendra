@@ -12,11 +12,13 @@ import AdminDashboard from "./pages/AdminDashboard";
 import DoctorDashboard from "./pages/DoctorDashboard";
 import PatientDashboard from "./pages/PatientDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
-import './index.css'
 import Contact from "./pages/Contact";
 import Account from "./pages/Account";
+import "./index.css";
+import DoctorAnita from "./pages/DoctorAnita";
+import DoctorPankaj from "./pages/DoctorPankaj";
 
-// ScrollToTop component
+// Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -25,21 +27,50 @@ function ScrollToTop() {
   return null;
 }
 
+// PublicRoute: redirects logged-in users to their dashboard
+function PublicRoute({ children }) {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    const role = localStorage.getItem("role");
+    switch (role) {
+      case "admin":
+        return <Navigate to="/admin/dashboard" replace />;
+      case "doctor":
+        return <Navigate to="/doctor/dashboard" replace />;
+      case "patient":
+        return <Navigate to="/patient/dashboard" replace />;
+      default:
+        return <Navigate to="/" replace />;
+    }
+  }
+
+  return children;
+}
+
 export default function App() {
   const location = useLocation();
-  const hideNavFooter = ["/login", "/register"]; // paths to hide nav/footer
+
+  // Hide navbar/footer on these paths
+  const hideNavFooter = ["/login", "/register"];
   const showNavFooter = !hideNavFooter.includes(location.pathname);
 
   return (
     <div className="min-h-screen flex flex-col">
-      <ScrollToTop /> {/* <-- Add this here */}
+      <ScrollToTop />
+
+      {/* Navbar */}
       {showNavFooter && <Navbar />}
+
       <main className="flex-grow">
         <Routes>
+          {/* Public Pages */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/contact" element={<Contact />} />
+
+          {/* Protected Patient Routes */}
           <Route
             path="/book"
             element={
@@ -48,30 +79,32 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route 
-            path="/login" 
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Account />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Auth Routes */}
+          <Route
+            path="/login"
             element={
               <PublicRoute>
                 <Login />
               </PublicRoute>
-            } 
+            }
           />
-          <Route 
-            path="/register" 
+          <Route
+            path="/register"
             element={
               <PublicRoute>
                 <Register />
               </PublicRoute>
-            } 
+            }
           />
-          <Route
-  path="/account"
-  element={
-    <ProtectedRoute>
-      <Account />
-    </ProtectedRoute>
-  }
-/>
 
           {/* Dashboards */}
           <Route
@@ -90,6 +123,8 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+           <Route path="/doctors/dr-pankaj-kumar-chaurasiya" element={<DoctorPankaj />} />
+  <Route path="/doctors/dr-anita-chaurasiya" element={<DoctorAnita />} />
           <Route
             path="/patient/dashboard"
             element={
@@ -100,27 +135,9 @@ export default function App() {
           />
         </Routes>
       </main>
+
+      {/* Footer */}
       {showNavFooter && <Footer />}
     </div>
   );
-}
-
-function PublicRoute({ children }) {
-  const token = localStorage.getItem("token");
-  
-  if (token) {
-    const role = localStorage.getItem("role");
-    switch (role) {
-      case "admin":
-        return <Navigate to="/admin/dashboard" replace />;
-      case "doctor":
-        return <Navigate to="/doctor/dashboard" replace />;
-      case "patient":
-        return <Navigate to="/patient/dashboard" replace />;
-      default:
-        return <Navigate to="/" replace />;
-    }
-  }
-  
-  return children;
 }

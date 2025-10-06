@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://madhuri-nidan-kendra.vercel.app/sitemap.xml

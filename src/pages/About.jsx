@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 
 export default function About() {
   const doctors = [
@@ -22,67 +23,126 @@ export default function About() {
   };
 
   return (
-    <motion.div
-      className="max-w-6xl mx-auto p-8 md:p-16"
-      initial="hidden"
-      animate="visible"
-      transition={{ staggerChildren: 0.2 }}
-    >
-      <motion.h2
-        className="text-4xl font-bold text-blue-800 mb-12 text-center"
-        variants={fadeInUp}
-      >
-        About Us
-      </motion.h2>
+    <>
+      <Helmet>
+        <title>About Us | Madhuri Nidan Kendra, Hasanpura, Siwan</title>
+        <meta
+          name="description"
+          content="Learn about Madhuri Nidan Kendra Clinic, our mission, facilities, and meet our expert doctors in Hasanpura, Siwan."
+        />
+        <link rel="canonical" href="https://yourdomain.com/about" />
 
-      <motion.p
-        className="text-gray-700 mb-6 text-center max-w-3xl mx-auto"
-        variants={fadeInUp}
-      >
-        At Madhuri Nidan Kendra Clinic, we have been delivering exceptional
-        healthcare for over a decade. Our expert doctors and dedicated medical
-        staff ensure every patient receives personalized, effective care in a
-        comfortable and safe environment.
-      </motion.p>
+        {/* Organization JSON-LD */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "MedicalOrganization",
+            "name": "Madhuri Nidan Kendra",
+            "url": "https://yourdomain.com",
+            "logo": "https://yourdomain.com/images/health.png",
+            "sameAs": [
+              "https://www.facebook.com/YourPage",
+              "https://www.instagram.com/YourPage"
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "opp. M. H. Nagar Police Station",
+              "addressLocality": "Hasanpura",
+              "addressRegion": "Siwan",
+              "postalCode": "841236",
+              "addressCountry": "IN"
+            },
+            "contactPoint": [
+              { "@type": "ContactPoint", "telephone": "+91 9939497429", "contactType": "customer service" }
+            ]
+          })}
+        </script>
 
-      <motion.p
-        className="text-gray-700 mb-12 text-center max-w-3xl mx-auto"
-        variants={fadeInUp}
-      >
-        Equipped with modern facilities and state-of-the-art equipment, our
-        clinic provides accurate diagnosis and advanced treatments. Experience
-        healthcare that truly cares, guided by the expertise of Dr. Pankaj and
-        Dr. Anita.
-      </motion.p>
-
-      <motion.h3
-        className="text-3xl font-semibold text-blue-700 mb-8 text-center"
-        variants={fadeInUp}
-      >
-        Meet the Founders
-      </motion.h3>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {doctors.map((doctor) => (
-          <motion.div
-            key={doctor.name}
-            className="flex flex-col items-center text-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300"
-            variants={fadeInUp}
-            whileHover={{ scale: 1.03 }}
-          >
-            <img
-              src={doctor.image}
-              alt={doctor.name}
-              className="w-40 h-40 object-cover rounded-full mb-4 border-4 border-blue-200"
-            />
-            <h4 className="text-xl font-bold text-gray-800">{doctor.name}</h4>
-            <p className="text-gray-600 mt-2">{doctor.qualifications}</p>
-            <span className="mt-1 text-blue-700 font-medium">
-              {doctor.specialization}
-            </span>
-          </motion.div>
+        {/* Doctors JSON-LD */}
+        {doctors.map((doc, idx) => (
+          <script key={idx} type="application/ld+json">
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Physician",
+              "name": doc.name,
+              "image": `https://yourdomain.com${doc.image}`,
+              "medicalSpecialty": doc.specialization,
+              "worksFor": { "@type": "MedicalOrganization", "name": "Madhuri Nidan Kendra" },
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "opp. M. H. Nagar Police Station",
+                "addressLocality": "Hasanpura",
+                "addressRegion": "Siwan",
+                "postalCode": "841236",
+                "addressCountry": "IN"
+              }
+            })}
+          </script>
         ))}
-      </div>
-    </motion.div>
+      </Helmet>
+
+      <motion.div
+        className="max-w-6xl mx-auto p-8 md:p-16"
+        initial="hidden"
+        animate="visible"
+        transition={{ staggerChildren: 0.2 }}
+      >
+        <motion.h2
+          className="text-4xl font-bold text-blue-800 mb-12 text-center"
+          variants={fadeInUp}
+        >
+          About Us
+        </motion.h2>
+
+        <motion.p
+          className="text-gray-700 mb-6 text-center max-w-3xl mx-auto"
+          variants={fadeInUp}
+        >
+          At Madhuri Nidan Kendra Clinic, we have been delivering exceptional
+          healthcare for over a decade. Our expert doctors and dedicated medical
+          staff ensure every patient receives personalized, effective care in a
+          comfortable and safe environment.
+        </motion.p>
+
+        <motion.p
+          className="text-gray-700 mb-12 text-center max-w-3xl mx-auto"
+          variants={fadeInUp}
+        >
+          Equipped with modern facilities and state-of-the-art equipment, our
+          clinic provides accurate diagnosis and advanced treatments. Experience
+          healthcare that truly cares, guided by the expertise of Dr. Pankaj and
+          Dr. Anita.
+        </motion.p>
+
+        <motion.h3
+          className="text-3xl font-semibold text-blue-700 mb-8 text-center"
+          variants={fadeInUp}
+        >
+          Meet the Founders
+        </motion.h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          {doctors.map((doctor) => (
+            <motion.div
+              key={doctor.name}
+              className="flex flex-col items-center text-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300"
+              variants={fadeInUp}
+              whileHover={{ scale: 1.03 }}
+            >
+              <img
+                src={doctor.image}
+                alt={doctor.name}
+                className="w-40 h-40 object-cover rounded-full mb-4 border-4 border-blue-200"
+              />
+              <h4 className="text-xl font-bold text-gray-800">{doctor.name}</h4>
+              <p className="text-gray-600 mt-2">{doctor.qualifications}</p>
+              <span className="mt-1 text-blue-700 font-medium">
+                {doctor.specialization}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </>
   );
 }
