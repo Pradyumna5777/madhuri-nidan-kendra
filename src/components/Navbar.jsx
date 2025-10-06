@@ -24,9 +24,10 @@ export default function Navbar() {
             alt="Madhuri Nidan Kendra"
             className="w-10 h-10 object-cover"
           />
-          <span className="font-bold text-2xl text-blue-700">
-            Madhuri Nidan Kendra
-          </span>
+          <span className="font-bold text-xl sm:text-2xl text-blue-700">
+  Madhuri Nidan Kendra
+</span>
+
         </Link>
 
         {/* Desktop Menu */}
