@@ -70,7 +70,7 @@ export default function BookAppointment() {
     visible: { transition: { staggerChildren: 0.2 } },
   };
 
-  if (loading) return <p className="text-center mt-10">Loading doctors...</p>;
+  if (loading) return <p className="text-center mt-10">Loading appointments...</p>;
   if (error) return <p className="text-center mt-10 text-red-600">{error}</p>;
 
   return (

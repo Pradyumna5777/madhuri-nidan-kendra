@@ -1,8 +1,11 @@
+// src/axiosInstance.js
 import axios from "axios";
 
-const baseURL = import.meta.env.DEV
-  ? "http://localhost:5000/api"
-  : "https://doctor-management-backend-k8ns.onrender.com/api";
+const isLocal = window.location.hostname === "localhost";
+
+const baseURL = isLocal
+  ? "http://localhost:5000/api" // local dev
+  : "https://doctor-management-backend-k8ns.onrender.com/api"; // live backend
 
 const axiosInstance = axios.create({
   baseURL,
