@@ -456,36 +456,42 @@ export default function Home() {
       </motion.section>
 
       {/* Testimonials */}
+    <motion.div
+  className="mt-16 w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8"
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.3 }}
+  transition={{ staggerChildren: 0.2 }}
+>
+  <h2 className="text-3xl font-bold text-blue-800 mb-4 sm:mb-6 text-center">
+    What Our Patients Say
+  </h2>
+
+  {/* Scrollable container */}
+  <div
+    ref={scrollRef}
+    className="flex gap-3 sm:gap-6 overflow-x-auto scrollbar-hide px-2 sm:px-4 py-4 sm:py-6 snap-x snap-mandatory scroll-smooth"
+  >
+    {testimonials.map((t, idx) => (
       <motion.div
-        className="mt-16 w-full max-w-6xl mx-auto p-6"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ staggerChildren: 0.2 }}
+        key={idx}
+        className="min-w-[70%] sm:min-w-[280px] md:min-w-[340px] bg-white/90 backdrop-blur-sm p-4 sm:p-6 rounded-lg shadow-md hover:shadow-xl transition-all flex-shrink-0 snap-start border border-gray-100"
+        variants={fadeInUp}
+        whileHover={{ scale: 1.05 }}
       >
-        <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
-          What Our Patients Say
-        </h2>
-        <div
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-hidden px-4 py-6 snap-x snap-mandatory"
-          style={{ scrollBehavior: "smooth" }}
-        >
-          {testimonials.map((t, idx) => (
-            <motion.div
-              key={idx}
-              className="min-w-[250px] md:min-w-[300px] bg-white p-6 rounded-lg shadow-lg flex-shrink-0 snap-start"
-              variants={fadeInUp}
-              whileHover={{ scale: 1.05 }}
-            >
-              <p className="italic text-gray-700">"{t.text}"</p>
-              <footer className="mt-4 font-bold text-gray-900 text-right">
-                - {t.author}
-              </footer>
-            </motion.div>
-          ))}
-        </div>
+        <p className="italic text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed">
+          “{t.text}”
+        </p>
+        <footer className="mt-3 sm:mt-4 font-semibold text-gray-900 text-right text-xs sm:text-sm md:text-base">
+          – {t.author}
+        </footer>
       </motion.div>
+    ))}
+  </div>
+
+  
+</motion.div>
+
 
       {/* Gallery */}
       <motion.div

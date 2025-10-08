@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../axiosInstance";
 import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -33,17 +34,17 @@ export default function Register() {
     }
   }, [navigate]);
 
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       await axiosInstance.post("/auth/register", form);
       setMessage("Registered successfully!");
       setForm({ name: "", email: "", password: "", role: "patient" });
-
-      setTimeout(() => navigate("/login"), 1000); // redirect after 1s
+      setTimeout(() => navigate("/login"), 1000);
     } catch (err) {
       console.error(err);
       setMessage(err.response?.data?.error || "Registration failed");
@@ -52,8 +53,22 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded shadow p-8">
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center relative px-4"
+      style={{
+        backgroundImage: `url('/images/bg.jpg')`, // 👈 put this in public/images/
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-[2px]"></div>
+
+      {/* Register Card with Framer Motion */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-md bg-white/90 backdrop-blur-md rounded-lg shadow-lg p-8"
+      >
         <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">
           Register
         </h2>
@@ -74,7 +89,7 @@ export default function Register() {
             value={form.name}
             onChange={handleChange}
             placeholder="Full Name"
-            className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400 outline-none"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition"
             required
           />
           <input
@@ -83,7 +98,7 @@ export default function Register() {
             value={form.email}
             onChange={handleChange}
             placeholder="Email"
-            className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400 outline-none"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition"
             required
           />
           <input
@@ -92,26 +107,26 @@ export default function Register() {
             value={form.password}
             onChange={handleChange}
             placeholder="Password"
-            className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400 outline-none"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition"
             required
           />
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 font-medium"
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-gray-600">
+        <p className="mt-6 text-center text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-blue-600 hover:underline font-medium">
             Login
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }

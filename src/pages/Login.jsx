@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axiosInstance from "../axiosInstance";
 import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -9,7 +10,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const googleButtonRef = useRef(null);
 
-  // Redirect if already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -39,7 +39,6 @@ export default function Login() {
     try {
       const res = await axiosInstance.post("/auth/login", form);
 
-      // Store token & user info
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
       localStorage.setItem("name", res.data.user.name);
@@ -47,11 +46,9 @@ export default function Login() {
 
       setMessage("Login successful!");
 
-      // Redirect based on role
       if (res.data.user.role === "admin") navigate("/admin/dashboard");
       else if (res.data.user.role === "doctor") navigate("/doctor/dashboard");
       else navigate("/patient/dashboard");
-
     } catch (err) {
       console.error(err);
       setMessage(err.response?.data?.error || "Login failed");
@@ -59,7 +56,6 @@ export default function Login() {
     setLoading(false);
   };
 
-  // Google OAuth handler
   const handleGoogleLogin = async (response) => {
     setLoading(true);
     try {
@@ -67,7 +63,6 @@ export default function Login() {
         token: response.credential,
       });
 
-      // Store token & user info
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
       localStorage.setItem("name", res.data.user.name);
@@ -75,11 +70,9 @@ export default function Login() {
 
       setMessage("Google login successful!");
 
-      // Redirect based on role
       if (res.data.user.role === "admin") navigate("/admin/dashboard");
       else if (res.data.user.role === "doctor") navigate("/doctor/dashboard");
       else navigate("/");
-
     } catch (err) {
       console.error("Google login error:", err);
       setMessage(err.response?.data?.error || "Google login failed");
@@ -87,50 +80,34 @@ export default function Login() {
     setLoading(false);
   };
 
-  // Load Google OAuth script
   useEffect(() => {
     const initializeGoogleSignIn = () => {
       if (window.google && googleButtonRef.current) {
-        // Use the actual Google Client ID directly for now
-        const clientId = "205532721629-tugpn95tfi42kc4dfeomnkq71af3n79p.apps.googleusercontent.com"; // Replace with your actual Client ID
-        
-        if (!clientId || clientId === "your_actual_google_client_id_here") {
-          console.error("Please set your Google Client ID in the Login component");
-          return;
-        }
+        const clientId =
+          "205532721629-tugpn95tfi42kc4dfeomnkq71af3n79p.apps.googleusercontent.com";
 
         window.google.accounts.id.initialize({
           client_id: clientId,
           callback: handleGoogleLogin,
         });
-        
-        window.google.accounts.id.renderButton(
-          googleButtonRef.current,
-          { 
-            theme: "outline", 
-            size: "large",
-            width: "100%",
-            text: "continue_with",
-            type: "standard"
-          }
-        );
 
-        // Optional: Also display the One Tap prompt
-        // window.google.accounts.id.prompt();
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: "outline",
+          size: "large",
+          width: "100%",
+          text: "continue_with",
+          type: "standard",
+        });
       }
     };
 
-    // Check if script is already loaded
-    if (window.google) {
-      initializeGoogleSignIn();
-    } else {
-      // Load Google OAuth script
+    if (window.google) initializeGoogleSignIn();
+    else {
       const script = document.createElement("script");
       script.src = "https://accounts.google.com/gsi/client";
       script.async = true;
       script.defer = true;
       script.onload = initializeGoogleSignIn;
-      script.onerror = () => console.error("Failed to load Google OAuth script");
       document.head.appendChild(script);
 
       return () => {
@@ -142,8 +119,22 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center relative px-4"
+      style={{
+        backgroundImage: `url('/images/bg.jpg')`,
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-[2px]"></div>
+
+      {/* Login Card with animation */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-md bg-white/90 backdrop-blur-md rounded-lg shadow-lg p-8"
+      >
         <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">
           Login
         </h2>
@@ -151,7 +142,9 @@ export default function Login() {
         {message && (
           <p
             className={`text-center mb-4 ${
-              message.includes("successful") ? "text-green-600" : "text-red-600"
+              message.includes("successful")
+                ? "text-green-600"
+                : "text-red-600"
             }`}
           >
             {message}
@@ -194,7 +187,9 @@ export default function Login() {
         <div className="mt-6">
           <div className="relative flex items-center">
             <div className="flex-grow border-t border-gray-300"></div>
-            <span className="flex-shrink mx-4 text-gray-600 text-sm">or continue with</span>
+            <span className="flex-shrink mx-4 text-gray-600 text-sm">
+              or continue with
+            </span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
           <div ref={googleButtonRef} className="mt-4 flex justify-center"></div>
@@ -202,11 +197,14 @@ export default function Login() {
 
         <p className="mt-6 text-center text-gray-600">
           Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline font-medium">
+          <Link
+            to="/register"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Register
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
