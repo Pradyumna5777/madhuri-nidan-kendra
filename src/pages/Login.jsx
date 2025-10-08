@@ -8,8 +8,10 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [bgLoaded, setBgLoaded] = useState(false); // track background load
   const googleButtonRef = useRef(null);
 
+  // Redirect if logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -72,7 +74,7 @@ export default function Login() {
 
       if (res.data.user.role === "admin") navigate("/admin/dashboard");
       else if (res.data.user.role === "doctor") navigate("/doctor/dashboard");
-      else navigate("/");
+      else navigate("/patient/dashboard");
     } catch (err) {
       console.error("Google login error:", err);
       setMessage(err.response?.data?.error || "Google login failed");
@@ -80,6 +82,7 @@ export default function Login() {
     setLoading(false);
   };
 
+  // Preload Google login script
   useEffect(() => {
     const initializeGoogleSignIn = () => {
       if (window.google && googleButtonRef.current) {
@@ -111,24 +114,40 @@ export default function Login() {
       document.head.appendChild(script);
 
       return () => {
-        if (document.head.contains(script)) {
-          document.head.removeChild(script);
-        }
+        if (document.head.contains(script)) document.head.removeChild(script);
       };
     }
   }, []);
 
+  // Preload background image
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/images/bg.webp"; // optimized background
+    img.onload = () => setBgLoaded(true);
+  }, []);
+
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center relative px-4"
-      style={{
-        backgroundImage: `url('/images/bg.jpg')`,
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center relative px-4 overflow-hidden">
+      {/* Low-res blurry placeholder */}
+      <div
+        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ${
+          bgLoaded ? "opacity-0" : "opacity-100"
+        }`}
+        style={{ backgroundImage: "url('/images/bg-small.jpg')" }}
+      ></div>
+
+      {/* Full background */}
+      {bgLoaded && (
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-700 opacity-100"
+          style={{ backgroundImage: "url('/images/bg.webp')" }}
+        ></div>
+      )}
+
       {/* Overlay */}
       <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-[2px]"></div>
 
-      {/* Login Card with animation */}
+      {/* Login Card */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -142,9 +161,7 @@ export default function Login() {
         {message && (
           <p
             className={`text-center mb-4 ${
-              message.includes("successful")
-                ? "text-green-600"
-                : "text-red-600"
+              message.includes("successful") ? "text-green-600" : "text-red-600"
             }`}
           >
             {message}

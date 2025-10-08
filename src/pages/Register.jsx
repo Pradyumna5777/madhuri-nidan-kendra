@@ -12,6 +12,7 @@ export default function Register() {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [bgLoaded, setBgLoaded] = useState(false); // track full bg load
 
   // Redirect if already logged in
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function Register() {
     try {
       await axiosInstance.post("/auth/register", form);
       setMessage("Registered successfully!");
-      setForm({ name: "", email: "", password: "", role: "patient" });
+      setForm({ name: "", email: "", password: "" });
       setTimeout(() => navigate("/login"), 1000);
     } catch (err) {
       console.error(err);
@@ -52,17 +53,35 @@ export default function Register() {
     setLoading(false);
   };
 
+  // Preload full-res background
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/images/bg.webp"; // optimized image
+    img.onload = () => setBgLoaded(true);
+  }, []);
+
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center relative px-4"
-      style={{
-        backgroundImage: `url('/images/bg.jpg')`, // 👈 put this in public/images/
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center relative px-4 overflow-hidden">
+      {/* Low-res placeholder */}
+      <div
+        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ${
+          bgLoaded ? "opacity-0" : "opacity-100"
+        }`}
+        style={{ backgroundImage: "url('/images/bg-small.jpg')" }}
+      ></div>
+
+      {/* Full background */}
+      {bgLoaded && (
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-700 opacity-100"
+          style={{ backgroundImage: "url('/images/bg.webp')" }}
+        ></div>
+      )}
+
       {/* Overlay */}
       <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-[2px]"></div>
 
-      {/* Register Card with Framer Motion */}
+      {/* Register Card */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
