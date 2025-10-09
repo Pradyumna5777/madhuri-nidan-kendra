@@ -56,7 +56,7 @@ export default function DoctorAnita() {
       <p className="mb-4">B.A.M.S. (Ranchi), D.G.O. (Mumbai)</p>
 
       <img
-        src="/images/anita.jpg"
+        src="/images/hosss.png"
         alt="Dr. Anita Chaurasiya"
         className="w-64 h-64 object-cover rounded-xl mb-6 shadow-md"
       />

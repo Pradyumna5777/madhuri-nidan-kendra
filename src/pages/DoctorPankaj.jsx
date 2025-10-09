@@ -52,7 +52,7 @@ export default function DoctorPankaj() {
       <p className="text-lg mb-2 font-semibold">Physician & Pediatrician</p>
       <p className="mb-4">B.A.M.S. (Ranchi), C.C.H. (Mumbai)</p>
       <img
-        src="/images/pankaj.jpg"
+        src="/images/hos1.png"
         alt="Dr. Pankaj Kumar Chaurasiya"
         className="w-64 h-64 object-cover rounded-xl mb-6"
       />
