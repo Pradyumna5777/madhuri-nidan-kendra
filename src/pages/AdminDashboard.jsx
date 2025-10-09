@@ -7,6 +7,7 @@ export default function AdminDashboard() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+      phone: "", // ✅ add phone field
     password: "",
     role: "doctor",
       specialty: "",   // ✅ add this
@@ -92,6 +93,7 @@ const handleSubmit = async (e) => {
     const formData = new FormData();
     formData.append("name", form.name);
     formData.append("email", form.email);
+    formData.append("phone", form.phone); // ✅ add phone
     formData.append("password", form.password);
     formData.append("specialty", form.specialty);
     formData.append("role", form.role);
@@ -118,6 +120,7 @@ const handleSubmit = async (e) => {
     setForm({
       name: "",
       email: "",
+        phone: "", // ✅ add phone
       password: "",
       role: "doctor",
         specialty: "", // Add this
@@ -145,6 +148,7 @@ const handleSubmit = async (e) => {
     setForm({
       name: doctor.name,
       email: doctor.email,
+          phone: doctor.phone || "", // ✅ include phone
       password: "",
       role: doctor.role,
           specialty: doctor.specialty || "",  // ✅ include specialty
@@ -158,6 +162,7 @@ const handleSubmit = async (e) => {
       const formData = new FormData();
       formData.append("name", form.name);
       formData.append("email", form.email);
+      formData.append("phone", form.phone); // ✅ add phone
       if (form.password) formData.append("password", form.password);
       formData.append("role", form.role);
       if (form.image) formData.append("image", form.image);
@@ -174,6 +179,7 @@ const handleSubmit = async (e) => {
       setForm({
         name: "",
         email: "",
+          phone: "", // ✅ add phone
         password: "",
         role: "doctor",
         image: null,
@@ -225,6 +231,13 @@ const handleSubmit = async (e) => {
             className="w-full p-3 border rounded"
             required
           />
+          <input
+  name="phone"
+  value={form.phone}
+  onChange={handleChange}
+  placeholder="Phone Number"
+  className="w-full p-3 border rounded"
+/>
           <input
             name="password"
             type="password"
@@ -282,6 +295,8 @@ const handleSubmit = async (e) => {
               )}
               <h4 className="font-bold">{doc.name}</h4>
               <p className="text-gray-600">{doc.specialty || "N/A"}</p>
+                <p className="text-sm text-gray-500">{doc.email}</p>
+                <p className="text-sm text-gray-500">{doc.phone || "No phone"}</p> {/* ✅ add phone display */}
               <p className="text-sm text-gray-500 capitalize">
                 Role: {doc.role}
               </p>
