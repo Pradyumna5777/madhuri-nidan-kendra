@@ -49,8 +49,8 @@ export default function Login() {
       setMessage("Login successful!");
 
       if (res.data.user.role === "admin") navigate("/admin/dashboard");
-      else if (res.data.user.role === "doctor") navigate("/doctor/dashboard");
-      else navigate("/patient/dashboard");
+      else if (res.data.user.role === "doctor") navigate("/");
+      else navigate("/");
     } catch (err) {
       console.error(err);
       setMessage(err.response?.data?.error || "Login failed");
@@ -73,8 +73,8 @@ export default function Login() {
       setMessage("Google login successful!");
 
       if (res.data.user.role === "admin") navigate("/admin/dashboard");
-      else if (res.data.user.role === "doctor") navigate("/doctor/dashboard");
-      else navigate("/patient/dashboard");
+      else if (res.data.user.role === "doctor") navigate("/");
+      else navigate("/");
     } catch (err) {
       console.error("Google login error:", err);
       setMessage(err.response?.data?.error || "Google login failed");
