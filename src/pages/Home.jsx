@@ -108,6 +108,7 @@ export default function Home() {
   const scrollRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null); // Add this line
 
   // Auto-scroll testimonials
   useEffect(() => {
@@ -734,7 +735,108 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+      {/* Gallery Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-blue-50 to-white px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-blue-800 mb-4">
+              Our Clinic Gallery
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Take a look at our modern facilities and welcoming environment
+            </p>
+          </motion.div>
 
+          <motion.div
+            className="w-full"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ staggerChildren: 0.15 }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {galleryImages.map((img, idx) => (
+                <motion.div
+                  key={idx}
+                  variants={fadeInUp}
+                  whileHover={{ scale: 1.05 }}
+                  className="overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                  onClick={() => setSelectedImage(idx)}
+                >
+                  <img
+                    src={img}
+                    alt={`Madhuri Nidan Kendra Clinic ${idx + 1}`}
+                    className="w-full h-64 object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Image Modal */}
+      <AnimatePresence>
+        {selectedImage !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="relative max-w-4xl max-h-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-12 right-0 text-white text-2xl hover:text-blue-300 transition-colors"
+              >
+                ✕
+              </button>
+              
+              {/* Main Image */}
+              <img
+                src={galleryImages[selectedImage]}
+                alt={`Madhuri Nidan Kendra Clinic ${selectedImage + 1}`}
+                className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+              />
+              
+              {/* Navigation */}
+              <div className="flex justify-between items-center mt-4">
+                <button
+                  onClick={() => setSelectedImage(selectedImage === 0 ? galleryImages.length - 1 : selectedImage - 1)}
+                  className="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors"
+                >
+                  ← Previous
+                </button>
+                
+                <span className="text-white text-sm">
+                  {selectedImage + 1} / {galleryImages.length}
+                </span>
+                
+                <button
+                  onClick={() => setSelectedImage(selectedImage === galleryImages.length - 1 ? 0 : selectedImage + 1)}
+                  className="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors"
+                >
+                  Next →
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-gradient-to-r from-blue-600 to-blue-800 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center text-white">
