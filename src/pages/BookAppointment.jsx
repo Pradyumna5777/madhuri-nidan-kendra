@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axiosInstance from "../axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,8 +21,10 @@ export default function BookAppointment() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Get user info if logged in
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+ // Memoized user object to prevent recreation on every render
+  const user = useMemo(() => 
+    JSON.parse(localStorage.getItem("user") || "{}"), 
+  []);
 
   useEffect(() => {
     axiosInstance
@@ -45,7 +47,7 @@ export default function BookAppointment() {
         setError("Failed to fetch doctors. Please try again later.");
         setLoading(false);
       });
-  }, [user]);
+  }, [user?.name, user?.email]); // Only depend on specific properties
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
